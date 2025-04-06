@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glücksrad</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>🎡 Glücksrad</h1>
+
+  <section>
+    <p>Entscheidungen:</p>
+    <div id="optionList">
+      <input type="text" value="Blau">
+      <input type="text" value="Grün">
+      <input type="text" value="Gelb">
+      <input type="text" value="Schwarz">
+    </div>
+    <button>+</button>
+    <button>-</button>
+    <button>Reset</button>
+  </section>
+
+  <section class="center">
+    <canvas id="wheel" width="300" height="300"></canvas>
+    <button>Start</button>
+    <p>🎯 Ergebnis: <strong>-</strong></p>
+  </section>
+
+  <section>
+    <p>Ergebnisse:</p>
+    <div class="results">
+      <div>1.</div><div>2.</div><div>3.</div>
+    </div>
+    <button>Runde löschen</button>
+  </section>
+</body>
+</html>
