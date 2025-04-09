@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Glücksrad Entscheidungshilfe</title>
+    <link rel="stylesheet" href="styles.css">
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <h1>Glücksrad für Entscheidungen</h1>
+    
+    <div class="settings">
+        <label>Anzahl der Entscheidungsmöglichkeiten:</label>
+        <div id="options">
+            <input type="text" value="Blau">
+            <input type="text" value="Grün">
+            <input type="text" value="Gelb">
+            <input type="text" value="Schwarz">
+        </div>
+        <button onclick="addOption()">+</button>
+        <button onclick="removeOption()">-</button>
+        <button onclick="resetOptions()">Einträge löschen</button>
+    </div>
+
+    <div class="wheel-container">
+        <canvas id="wheel" width="300" height="300"></canvas>
+        <button onclick="spinWheel()">Start</button>
+    </div>
+
+    <div class="result">
+        <h2>Ergebnis:</h2>
+        <p id="resultText">-</p>
+        <button onclick="clearResult()">Runde löschen</button>
+    </div>
+</body>
+</html>
+body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+}
+
+.settings {
+    margin: 20px;
+}
+
+button {
+    margin: 5px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+.wheel-container {
+    position: relative;
+    margin: 20px auto;
+}
+
+canvas {
+    border: 2px solid black;
+    background-color: white;
+    border-radius: 50%;
+}
+
+.result {
+    margin-top: 20px;
+    font-size: 1.5em;
+}
