@@ -1,43 +1,80 @@
-
 const canvas = document.getElementById("wheel"),
-      ctx = canvas.getContext("2d"),
-      btnStart = document.querySelector(".center button"),
-      btns = document.querySelectorAll("section button"),
-      inputBox = document.getElementById("optionList"),
-      resultBoxes = document.querySelectorAll(".results div");
+  ctx = canvas.getContext("2d"),
+  btnStart = document.querySelector(".center button"),
+  btns = document.querySelectorAll("section button"),
+  optionBox = document.getElementById("optionList"),
+  resultBox = document.querySelector(".results"),
+  resultClear = document.querySelector("section:last-of-type button");
 
 let results = JSON.parse(localStorage.getItem("drehradErgebnisse")) || [];
 
-const getInputs = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
+// Optionen aus Eingabefeldern sammeln
+const getOptions = () => [...optionBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
-const draw = () => {
-  const opts = getInputs(), r = canvas.width / 2, a = (2 * Math.PI) / opts.length,
-        colors = ["#1d65f5", "#12f772", "#eafb31", "#10161d", "#e67e22", "#9b59b6", "#e84393", "#2c3e50"];
+function draw() {
+    const opts = getOptions(), r = canvas.width / 2, a = (2 * Math.PI) / opts.length;
+    const bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+    opts.forEach((txt, i) => {
+      const color = i % 3;
+      ctx.beginPath();
+      ctx.moveTo(r, r);
+      ctx.arc(r, r, r, i * a, (i + 1) * a);
+      ctx.fillStyle = bg[color]; ctx.fill(); ctx.stroke();
+  
+      ctx.save();
+      ctx.translate(r, r);
+      ctx.rotate(i * a + a / 2);
+      ctx.fillStyle = fg[color];
+      ctx.font = "bold 14px sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(txt, r - 10, 5);
+      ctx.restore();
+    });
+  }
+  
+  
+      ctx.beginPath();
+      ctx.moveTo(r, r);
+      ctx.arc(r, r, r, i * a, (i + 1) * a);
+      ctx.fillStyle = bgColor;
+      ctx.fill();
+      ctx.stroke();
+  
+      ctx.save();
+      ctx.translate(r, r);
+      ctx.rotate(i * a + a / 2);
+      ctx.fillStyle = textColor;
+      ctx.font = "bold 14px sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(txt, r - 10, 5);
+      ctx.restore();
+    });
+  }
 
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  opts.forEach((txt, i) => {
-    ctx.beginPath();
-    ctx.moveTo(r, r);
-    ctx.arc(r, r, r, i * a, (i + 1) * a);
-    ctx.fillStyle = colors[i % colors.length];
-    ctx.fill(); ctx.stroke();
+// Ergebnis anzeigen
+function show(r) {
+  results.push(r);
+  localStorage.setItem("drehradErgebnisse", JSON.stringify(results));
+  updateResults();
+}
 
-    ctx.save();
-    ctx.translate(r, r);
-    ctx.rotate(i * a + a / 2);
-    ctx.fillStyle = "#fff";
-    ctx.font = "bold 14px sans-serif";
-    ctx.textAlign = "right";
-    ctx.fillText(txt, r - 10, 5);
-    ctx.restore();
+// Ergebnisse dynamisch darstellen
+function updateResults() {
+  resultBox.innerHTML = "";
+  results.forEach((res, i) => {
+    const div = document.createElement("div");
+    div.textContent = `${i + 1}. ${res}`;
+    resultBox.appendChild(div);
   });
-};
+}
 
-const spin = () => {
-  let rot = 0, speed = Math.random() * 30 + 20, opts = getInputs();
+// Drehen starten
+function spin() {
+  let rot = 0, speed = Math.random() * 30 + 20, opts = getOptions();
   const spinLoop = setInterval(() => {
-    rot += speed;
-    speed *= 0.95;
+    rot += speed; speed *= 0.95;
     canvas.style.transform = `rotate(${rot}deg)`;
     if (speed < 0.5) {
       clearInterval(spinLoop);
@@ -45,41 +82,47 @@ const spin = () => {
       show(opts[i]);
     }
   }, 50);
-};
+}
 
-const show = r => {
-  results.unshift(r);
-  results = results.slice(0, 3);
-  resultBoxes.forEach((box, i) => box.textContent = results[i] || "-");
-  localStorage.setItem("drehradErgebnisse", JSON.stringify(results));
-};
-
-const add = () => {
+// Felder hinzufügen
+const addInput = () => {
   const inp = document.createElement("input");
   inp.type = "text";
-  inp.placeholder = `Option ${inputBox.children.length + 1}`;
-  inputBox.appendChild(inp);
+  inp.placeholder = `Option ${optionBox.children.length + 1}`;
+  optionBox.appendChild(inp); draw();
+};
+
+// Felder entfernen
+const removeInput = () => {
+  if (optionBox.children.length > 2) optionBox.removeChild(optionBox.lastElementChild);
   draw();
 };
 
-const remove = () => {
-  if (inputBox.children.length > 2) {
-    inputBox.removeChild(inputBox.lastElementChild);
-    draw();
-  }
+// Eingaben löschen
+const clearInputs = () => {
+  [...optionBox.children].forEach(i => i.value = "");
+  draw();
 };
 
-const reset = () => {
-    results = [];
-    resultBoxes.forEach(box => box.textContent = "-");
-    canvas.style.transform = "rotate(0deg)";
-    localStorage.removeItem("drehradErgebnisse");
-  };
+// Ergebnisse löschen
+const clearResults = () => {
+  results = [];
+  localStorage.removeItem("drehradErgebnisse");
+  resultBox.innerHTML = "";
+  canvas.style.transform = "rotate(0deg)";
+};
 
-draw(); show("-");
+// Events binden
 btnStart.addEventListener("click", spin);
-btns[0].addEventListener("click", add);
-btns[1].addEventListener("click", remove);
-btns[2].addEventListener("click", reset);
-btns[3].addEventListener("click", reset);
-inputBox.addEventListener("input", draw);
+btns[0].addEventListener("click", addInput);
+btns[1].addEventListener("click", removeInput);
+btns[2].addEventListener("click", clearInputs);
+resultClear.addEventListener("click", clearResults);
+optionBox.addEventListener("input", draw);
+
+// Startzustand
+if (optionBox.children.length === 0) for (let i = 0; i < 4; i++) addInput();
+draw();
+updateResults();
+
+  
