@@ -41,19 +41,23 @@ function draw() {
   }
 
 
-function spin() {
-  let rot = 0, speed = Math.random() * 30 + 20, opts = getOptions();
-  const loop = setInterval(() => {
-    rot += speed; speed *= 0.95;
-    canvas.style.transform = `rotate(${rot}deg)`;
-    if (speed < 0.5) {
-      clearInterval(loop);
-      const corrected = (360 - (rot % 360) + 90) % 360;
-const index = Math.floor((corrected / 360) * opts.length) % opts.length;
-      showResult(opts[i]);
-    }
-  }, 50);
-}
+  function spin() {
+    let rot = 0, speed = Math.random() * 30 + 20, opts = getOptions();
+    const loop = setInterval(() => {
+      rot += speed;
+      speed *= 0.95;
+      canvas.style.transform = `rotate(${rot}deg)`;
+      if (speed < 0.5) {
+        clearInterval(loop);
+  
+        // Korrektur: Ergebnis liegt oben (Pfeilposition), aber Zeichenstart ist rechts (90°)
+        const winkel = (360 - (rot % 360) + 90) % 360;
+        const index = Math.floor((winkel / 360) * opts.length) % opts.length;
+  
+        showResult(opts[index]);
+      }
+    }, 50);
+  }
 
 function showResult(r) {
   results.push(r);
