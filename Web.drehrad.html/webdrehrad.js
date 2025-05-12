@@ -10,51 +10,64 @@ let results = JSON.parse(localStorage.getItem("drehradErgebnisse")) || [];
 
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
-function draw() {
-    const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;
-    const bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
-    const cList = [], n = bg.length;
-    let last = -1;
-  
-    for (let i = 0; i < opts.length; i++) {
-      let c = 0;
-      while (c === last || (i === opts.length - 1 && c === cList[0])) c = (c + 1) % n;
-      cList.push(last = c);
-    }
-  
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    opts.forEach((t, i) => {
-      ctx.beginPath();
-      ctx.moveTo(r, r);
-      ctx.arc(r, r, r, i * a, (i + 1) * a);
-      ctx.fillStyle = bg[cList[i]]; ctx.fill(); ctx.stroke();
-  
-      ctx.save();
-      ctx.translate(r, r);
-      ctx.rotate(i * a + a / 2);
-      ctx.fillStyle = fg[cList[i]];
-      ctx.font = "bold 14px sans-serif";
-      ctx.textAlign = "right";
-      ctx.fillText(t, r - 10, 5);
-      ctx.restore();
-    });
-  }
+let segmente = [];
 
+function draw() {
+  const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;
+  const bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
+  segmente = []; // leeren!
+
+  let last = -1;
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  opts.forEach((txt, i) => {
+    let c = 0;
+    while (c === last || (i === opts.length - 1 && c === segmente[0]?.color)) c = (c + 1) % bg.length;
+    last = c;
+
+    const startAngle = i * a;
+    const endAngle = (i + 1) * a;
+
+    segmente.push({ start: startAngle, end: endAngle, text: txt, color: c });
+
+    ctx.beginPath();
+    ctx.moveTo(r, r);
+    ctx.arc(r, r, r, startAngle, endAngle);
+    ctx.fillStyle = bg[c]; ctx.fill(); ctx.stroke();
+
+    ctx.save();
+    ctx.translate(r, r);
+    ctx.rotate(startAngle + a / 2);
+    ctx.fillStyle = fg[c];
+    ctx.font = "bold 14px sans-serif";
+    ctx.textAlign = "right";
+    ctx.fillText(txt, r - 10, 5);
+    ctx.restore();
+  });
+}
 
   function spin() {
-    let rot = 0, speed = Math.random() * 30 + 20, opts = getOptions();
+    let rot = 0, speed = Math.random() * 30 + 20;
+  
     const loop = setInterval(() => {
       rot += speed;
       speed *= 0.95;
       canvas.style.transform = `rotate(${rot}deg)`;
+  
       if (speed < 0.5) {
         clearInterval(loop);
   
-        // Korrektur: Ergebnis liegt oben (Pfeilposition), aber Zeichenstart ist rechts (90°)
-        const winkel = (360 - (rot % 360) + 90) % 360;
-        const index = Math.floor((winkel / 360) * opts.length) % opts.length;
+        // Aktueller Winkel unter dem Pfeil (270° im globalen Raum)
+        const totalRotation = (rot % 360 + 360) % 360;
+        const zielWinkelGrad = (270 - totalRotation + 360) % 360;
+        const zielWinkelRad = zielWinkelGrad * Math.PI / 180;
   
-        showResult(opts[index]);
+        const getroffen = segmente.find(s =>
+          zielWinkelRad >= s.start && zielWinkelRad < s.end
+        );
+  
+        const text = getroffen ? getroffen.text : "❓";
+        showResult(text);
       }
     }, 50);
   }
