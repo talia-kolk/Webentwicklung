@@ -11,21 +11,31 @@ let results = JSON.parse(localStorage.getItem("drehradErgebnisse")) || [];
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
 function draw() {
-  const opts = getOptions(), r = canvas.width / 2, a = (2 * Math.PI) / opts.length,
-        bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  opts.forEach((txt, i) => {
-    let c = i % 3;
-    ctx.beginPath(); ctx.moveTo(r, r);
-    ctx.arc(r, r, r, i * a, (i + 1) * a);
-    ctx.fillStyle = bg[c]; ctx.fill(); ctx.stroke();
-    ctx.save();
-    ctx.translate(r, r); ctx.rotate(i * a + a / 2);
-    ctx.fillStyle = fg[c]; ctx.font = "bold 14px sans-serif";
-    ctx.textAlign = "right"; ctx.fillText(txt, r - 10, 5);
-    ctx.restore();
-  });
-}
+    const opts = getOptions(), r = canvas.width / 2, a = (2 * Math.PI) / opts.length;
+    const bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+  
+    let last = -1;
+    opts.forEach((txt, i) => {
+      // Finde eine Farbe, die nicht gleich der letzten ist
+      let c = (last + 1) % bg.length;
+      if (i > 0 && bg[c] === bg[last]) c = (c + 1) % bg.length;
+      last = c;
+  
+      ctx.beginPath();
+      ctx.moveTo(r, r);
+      ctx.arc(r, r, r, i * a, (i + 1) * a);
+      ctx.fillStyle = bg[c]; ctx.fill(); ctx.stroke();
+  
+      ctx.save();
+      ctx.translate(r, r); ctx.rotate(i * a + a / 2);
+      ctx.fillStyle = fg[c];
+      ctx.font = "bold 14px sans-serif";
+      ctx.textAlign = "right";
+      ctx.fillText(txt, r - 10, 5);
+      ctx.restore();
+    });
+  }
 
 function spin() {
   let rot = 0, speed = Math.random() * 30 + 20, opts = getOptions();
@@ -82,6 +92,9 @@ addBtn.addEventListener("click", addInput);
 removeBtn.addEventListener("click", removeInput);
 clearInputsBtn.addEventListener("click", clearInputs);
 clearResultsBtn.addEventListener("click", clearResults);
-inputBox.addEventListener("
+inputBox.addEventListener("input", draw); 
+
+if (inputBox.children.length === 0) for (let i = 0; i < 4; i++) addInput(); 
+draw(); updateResults(); 
 
   
