@@ -11,31 +11,35 @@ let results = JSON.parse(localStorage.getItem("drehradErgebnisse")) || [];
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
 function draw() {
-    const opts = getOptions(), r = canvas.width / 2, a = (2 * Math.PI) / opts.length;
+    const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;
     const bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+    const cList = [], n = bg.length;
     let last = -1;
-    opts.forEach((txt, i) => {
-      // Finde eine Farbe, die nicht gleich der letzten ist
-      let c = (last + 1) % bg.length;
-      if (i > 0 && bg[c] === bg[last]) c = (c + 1) % bg.length;
-      last = c;
   
+    for (let i = 0; i < opts.length; i++) {
+      let c = 0;
+      while (c === last || (i === opts.length - 1 && c === cList[0])) c = (c + 1) % n;
+      cList.push(last = c);
+    }
+  
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    opts.forEach((t, i) => {
       ctx.beginPath();
       ctx.moveTo(r, r);
       ctx.arc(r, r, r, i * a, (i + 1) * a);
-      ctx.fillStyle = bg[c]; ctx.fill(); ctx.stroke();
+      ctx.fillStyle = bg[cList[i]]; ctx.fill(); ctx.stroke();
   
       ctx.save();
-      ctx.translate(r, r); ctx.rotate(i * a + a / 2);
-      ctx.fillStyle = fg[c];
+      ctx.translate(r, r);
+      ctx.rotate(i * a + a / 2);
+      ctx.fillStyle = fg[cList[i]];
       ctx.font = "bold 14px sans-serif";
       ctx.textAlign = "right";
-      ctx.fillText(txt, r - 10, 5);
+      ctx.fillText(t, r - 10, 5);
       ctx.restore();
     });
   }
+
 
 function spin() {
   let rot = 0, speed = Math.random() * 30 + 20, opts = getOptions();
