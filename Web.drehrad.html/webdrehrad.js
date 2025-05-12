@@ -48,7 +48,8 @@ function spin() {
     canvas.style.transform = `rotate(${rot}deg)`;
     if (speed < 0.5) {
       clearInterval(loop);
-      const i = Math.floor(((rot % 360) / 360) * opts.length) % opts.length;
+      const corrected = (360 - (rot % 360) + 90) % 360;
+const index = Math.floor((corrected / 360) * opts.length) % opts.length;
       showResult(opts[i]);
     }
   }, 50);
