@@ -56,3 +56,18 @@ body {
     text-align: center;
     margin: 0 .2rem;
   }
+  .rad-wrapper {
+    position: relative;
+    width: 300px;
+    margin: auto;
+  }
+  
+  .pfeil {
+    position: absolute;
+    top: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 20px;
+    color: red;
+    z-index: 10;
+  }
