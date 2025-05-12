@@ -70,13 +70,11 @@ const remove = () => {
 };
 
 const reset = () => {
-  inputBox.innerHTML = "";
-  for (let i = 0; i < 4; i++) add();
-  results = [];
-  canvas.style.transform = "rotate(0deg)";
-  show("-");
-  localStorage.removeItem("drehradErgebnisse");
-};
+    results = [];
+    resultBoxes.forEach(box => box.textContent = "-");
+    canvas.style.transform = "rotate(0deg)";
+    localStorage.removeItem("drehradErgebnisse");
+  };
 
 draw(); show("-");
 btnStart.addEventListener("click", spin);
