@@ -6,7 +6,12 @@ const canvas = document.getElementById("wheel"),
   inputBox = document.getElementById("optionList"),
   resultBox = document.querySelector(".results");
 
-let results = JSON.parse(localStorage.getItem("drehradErgebnisse")) || [], segmente = [];
+  fetch("/api/results")
+  .then(res => res.json())
+  .then(data => {
+    results = data.map(r => r.text); // Array aus Texten
+    updateResults();
+  });
 
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
@@ -60,7 +65,11 @@ function spin() {
 
 const showResult = r => {
   results.push(r); 
-  localStorage.setItem("drehradErgebnisse", JSON.stringify(results));
+  fetch("/api/results", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ result: r })
+  });
   updateResults();
 };
 
@@ -92,10 +101,12 @@ const clearInputs = () => {
 };
 
 const clearResults = () => {
-  results = [];
-  localStorage.removeItem("drehradErgebnisse");
-  resultBox.innerHTML = "";
-  canvas.style.transform = "rotate(0deg)";
+  fetch("/api/results", { method: "DELETE" })
+  .then(() => {
+    results = [];
+    resultBox.innerHTML = "";
+    canvas.style.transform = "rotate(0deg)";
+  });
 };
 
 startBtn.addEventListener("click", spin);
