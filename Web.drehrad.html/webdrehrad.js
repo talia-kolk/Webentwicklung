@@ -59,7 +59,7 @@ function spin() {
 }
 
 const showResult = r => {
-  results.push(r);
+  results.push(r); 
   localStorage.setItem("drehradErgebnisse", JSON.stringify(results));
   updateResults();
 };
@@ -108,4 +108,24 @@ inputBox.addEventListener("input", draw);
 if (inputBox.children.length === 0) for (let i = 0; i < 4; i++) addInput();
 draw(); updateResults();
 
+async.function requestTextWithGET(url) {
+  const respomse = await fetch(url); 
+  console.log('Response:', response);
+  const text = await response.text(); 
+  console.log('Respons-Text:',text); 
+}
+requestTextWithGET('http://127.0.0.1:3000/');
+console.log('Zwischenzeitlich weiterarbeiten...');
+
+async function sendJsonWithGET(url,jsonData) {
+  const response = await fetch(url,{
+    method: 'post', 
+    body: jsonData}
+  )
+}
+
+const person = {name: "Max", alter: 19}; 
+const jsonData = JSON.stringify(person); 
+
+sendJsonWithPOST('http://localhost:3000/', jsonData); 
   
