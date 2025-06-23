@@ -6,12 +6,20 @@ const canvas = document.getElementById("wheel"),
   inputBox = document.getElementById("optionList"),
   resultBox = document.querySelector(".results");
 
-  fetch("/api/results")
+// Optionen vom Server laden
+fetch("/api/options")
   .then(res => res.json())
   .then(data => {
-    results = data.map(r => r.text); // Array aus Texten
-    updateResults();
+    inputBox.innerHTML = ""; // Vorherige löschen
+    data.forEach(opt => {
+      const inp = document.createElement("input");
+      inp.type = "text";
+      inp.value = opt.name;
+      inputBox.appendChild(inp);
+    });
+    draw();
   });
+
 
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
@@ -109,15 +117,20 @@ const clearResults = () => {
   });
 };
 
-startBtn.addEventListener("click", spin);
-addBtn.addEventListener("click", addInput);
+startBtn.addEventListener("click", async () => {
+  await speichereOptionen(); 
+  spin(); 
+}); 
+
+addBtn.addEventListener("click", addInput); 
 removeBtn.addEventListener("click", removeInput);
 clearInputsBtn.addEventListener("click", clearInputs);
 clearResultsBtn.addEventListener("click", clearResults);
 inputBox.addEventListener("input", draw);
 
 if (inputBox.children.length === 0) for (let i = 0; i < 4; i++) addInput();
-draw(); updateResults();
+draw();
+ updateResults();
 
 async.function requestTextWithGET(url) {
   const respomse = await fetch(url); 
@@ -138,5 +151,14 @@ async function sendJsonWithGET(url,jsonData) {
 const person = {name: "Max", alter: 19}; 
 const jsonData = JSON.stringify(person); 
 
-sendJsonWithPOST('http://localhost:3000/', jsonData); 
+sendJsonWithPOST('http://localhost:3000/', jsonData);  
+
+async function speichereOptionen() {
+  const options = [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
+  await fetch("/api/options", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(options)
+  });
+}
   

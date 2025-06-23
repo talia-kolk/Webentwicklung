@@ -2,10 +2,10 @@ const http = require('http');
 const sqlite3 = require('sqlite3');
 const sqlite = require('sqlite');
 
-const hostname = '127.0.0.1';
+const hostname = '127.0.0.1'; // lokaler Computer 
 const port = 3000;
-const dbFilePath = 'results.db';
-let db;
+const dbFilePath = 'results.db'; //  Datenbank-Datei gespeichert
+let db; // Variable später mit Datenbankverbindung belegt
 
 async function startServer() {
   db = await sqlite.open({
