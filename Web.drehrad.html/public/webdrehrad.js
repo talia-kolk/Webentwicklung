@@ -1,4 +1,4 @@
-const canvas = document.getElementById("wheel"),
+ const canvas = document.getElementById("wheel"),
   ctx = canvas.getContext("2d"),
   [addBtn, removeBtn, clearInputsBtn] = document.querySelectorAll("section button"),
   startBtn = document.querySelector(".center button"),
@@ -132,12 +132,12 @@ if (inputBox.children.length === 0) for (let i = 0; i < 4; i++) addInput();
 draw();
  updateResults();
 
-async.function requestTextWithGET(url) {
+
   const respomse = await fetch(url); 
   console.log('Response:', response);
   const text = await response.text(); 
   console.log('Respons-Text:',text); 
-}
+
 requestTextWithGET('http://127.0.0.1:3000/');
 console.log('Zwischenzeitlich weiterarbeiten...');
 
@@ -161,4 +161,3 @@ async function speichereOptionen() {
     body: JSON.stringify(options)
   });
 }
-  
