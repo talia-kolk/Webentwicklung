@@ -20,7 +20,7 @@ fetch("/api/options")
     draw();
   });
 
-
+  let results = JSON.parse(localStorage.getItem("drehradErgebnisse")) || [], segmente = [];
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
 function draw() {
