@@ -1,6 +1,16 @@
 {
+  "name": "gluecksrad-server",
+  "version": "1.0.0",
+  "description": "Backend für das Web-Glücksrad mit SQLite-Datenbank",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "author": "Dein Name",
+  "license": "ISC",
   "dependencies": {
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   }
 }
+
