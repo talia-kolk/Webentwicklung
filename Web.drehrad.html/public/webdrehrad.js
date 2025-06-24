@@ -88,12 +88,16 @@ function spin() {
 
 
 const showResult = r => {
-  results.push(r); 
+  results.push(r);
+  localStorage.setItem("drehradErgebnisse", JSON.stringify(results));
+
+  // 🔄 Ergebnis zusätzlich an den Server schicken:
   fetch("/api/results", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ result: r })
-  });
+  }).catch(err => console.error("Fehler beim Senden an Server:", err));
+
   updateResults();
 };
 
