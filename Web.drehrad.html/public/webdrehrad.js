@@ -75,7 +75,7 @@ function spin() {
         const getroffen = segmente.find(s =>
           zielWinkelRad >= s.start && zielWinkelRad < s.end
         );//â€š
-      showResult(segmente?.text || "â“");
+        
       const text = getroffen ? getroffen.text : "â“";//Add commentMore actions
         showResult(text);
     }
