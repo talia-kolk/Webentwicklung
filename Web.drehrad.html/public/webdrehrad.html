@@ -12,10 +12,13 @@
 
   <section>
     <p>Entscheidungen:</p>
-    <div id="optionList"></div>
-    <button>+</button>
-    <button>-</button>
-    <button>löschen</button>
+    <div id="optionList">
+      <input type="text" value="Option 1" />
+      <input type="text" value="Option 2" />
+    </div>
+    <button id="addBtn">+</button>
+    <button id="removeBtn">-</button>
+    <button id="clearInputsBtn">löschen</button>
   </section>
 
   <section class="center">
@@ -23,13 +26,13 @@
       <div class="pfeil">▼</div>
       <canvas id="wheel" width="300" height="300"></canvas>
     </div>
-    <button>Start!</button>
+    <button id="startBtn">Start!</button>
   </section>
 
   <section>
     <p>Ergebnisse:</p>
     <div class="results"></div>
-    <button>Runde löschen</button>
+    <button id="clearResultsBtn">Runde löschen</button>
   </section>
 </body>
 </html>

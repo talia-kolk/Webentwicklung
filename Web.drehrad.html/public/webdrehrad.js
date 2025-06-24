@@ -1,10 +1,13 @@
- const canvas = document.getElementById("wheel"),
+const canvas = document.getElementById("wheel"),
   ctx = canvas.getContext("2d"),
-  [addBtn, removeBtn, clearInputsBtn] = document.querySelectorAll("section button"),
-  startBtn = document.querySelector(".center button"),
-  clearResultsBtn = document.querySelector("section:last-of-type button"),
+  addBtn = document.getElementById("addBtn"),
+  removeBtn = document.getElementById("removeBtn"),
+  clearInputsBtn = document.getElementById("clearInputsBtn"),
+  startBtn = document.getElementById("startBtn"),
+  clearResultsBtn = document.getElementById("clearResultsBtn"),
   inputBox = document.getElementById("optionList"),
   resultBox = document.querySelector(".results");
+
 
 // Optionen vom Server laden
 fetch("/api/options")
@@ -24,43 +27,43 @@ fetch("/api/options")
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
 function draw() {
-  const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length,
-    bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
+  const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   segmente = [];
   let last = -1;
-
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  segmente = [];
   opts.forEach((txt, i) => {
-    let c = 0;
-    while (c === last || (i === opts.length - 1 && c === segmente[0]?.color)) c = (c + 1) % bg.length;
-    last = c;
     const start = i * a, end = (i + 1) * a;
-    segmente.push({ start, end, text: txt, color: c });
-
+    const isEven = i % 2 === 0;
+    const fillColor = isEven ? "#000" : "#fff";
+    const textColor = isEven ? "#fff" : "#000";
+  
+    segmente.push({ start, end, text: txt });
+  
     ctx.beginPath();
     ctx.moveTo(r, r);
     ctx.arc(r, r, r, start, end);
-    ctx.fillStyle = bg[c]; ctx.fill(); ctx.stroke();
-
+    ctx.fillStyle = fillColor;
+    ctx.fill();
+    ctx.stroke();
+  
     ctx.save();
     ctx.translate(r, r);
     ctx.rotate(start + a / 2);
-    ctx.fillStyle = fg[c];
+    ctx.fillStyle = textColor;
     ctx.font = "bold 14px sans-serif";
     ctx.textAlign = "right";
     ctx.fillText(txt, r - 10, 5);
     ctx.restore();
   });
-}
 
 function spin() {
   let rot = 0, speed = Math.random() * 30 + 20;
-
   const loop = setInterval(() => {
     rot += speed;
     speed *= 0.95;
     canvas.style.transform = `rotate(${rot}deg)`;
-
     if (speed < 0.5) {
       clearInterval(loop);
       const deg = (rot % 360 + 360) % 360;
@@ -70,6 +73,7 @@ function spin() {
     }
   }, 50);
 }
+
 
 const showResult = r => {
   results.push(r); 
