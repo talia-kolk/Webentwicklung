@@ -1,20 +1,19 @@
-const canvas = document.getElementById("wheel");
-const ctx = canvas.getContext("2d");
-
-const addBtn = document.getElementById("addBtn");
-const removeBtn = document.getElementById("removeBtn");
-const clearInputsBtn = document.getElementById("clearInputsBtn");
-const startBtn = document.getElementById("startBtn");
-const clearResultsBtn = document.getElementById("clearResultsBtn");
-const inputBox = document.getElementById("optionList");
-const resultBox = document.getElementById("resultBox");
+const canvas = document.getElementById("wheel"),
+  ctx = canvas.getContext("2d"),
+  addBtn = document.getElementById("addBtn"),
+  removeBtn = document.getElementById("removeBtn"),
+  clearInputsBtn = document.getElementById("clearInputsBtn"),
+  startBtn = document.getElementById("startBtn"),
+  clearResultsBtn = document.getElementById("clearResultsBtn"),
+  inputBox = document.getElementById("optionList"),
+  resultBox = document.querySelector(".results");
 
 
 // Optionen vom Server laden
 fetch("/api/options")
   .then(res => res.json())
   .then(data => {
-    inputBox.innerHTML = ""; // Vorherige löschen
+    inputBox.innerHTML = ""; // Vorherige lÃ¶schen
     data.forEach(opt => {
       const inp = document.createElement("input");
       inp.type = "text";
@@ -28,7 +27,7 @@ fetch("/api/options")
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
 function draw() {
-  const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;
+  const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;//Add commentMore actions
   const bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
   segmente = []; // leeren!
 
@@ -56,40 +55,41 @@ function draw() {
     ctx.fillStyle = fg[c];
     ctx.font = "bold 14px sans-serif";
     ctx.textAlign = "right";
-    ctx.fillText(txt, r - 10, 5);
+    ctx.fillText(txt, r - 10, 5);//Add commentMore actions
     ctx.restore();
   });
 }
 
 function spin() {
   let rot = 0, speed = Math.random() * 30 + 20;
-
   const loop = setInterval(() => {
     rot += speed;
     speed *= 0.95;
     canvas.style.transform = `rotate(${rot}deg)`;
-
     if (speed < 0.5) {
       clearInterval(loop);
-
-      const totalRotation = rot % 360;
-      const zielWinkelGrad = (270 - totalRotation + 360) % 360;
-      const zielWinkelRad = zielWinkelGrad * Math.PI / 180;
-
-      const getroffen = segmente.find(s => 
-        zielWinkelRad >= s.start && zielWinkelRad < s.end
-      );
-
-      const text = getroffen ? getroffen.text : "❓";
-      showResult(text);
+      const totalRotation = (rot % 360 + 360) % 360;//Add commentMore actions
+        const zielWinkelGrad = (270 - totalRotation + 360) % 360;
+        const zielWinkelRad = zielWinkelGrad * Math.PI / 180;
+  //Add commentMore actions
+        const getroffen = segmente.find(s =>
+          zielWinkelRad >= s.start && zielWinkelRad < s.end
+        );//â€š
+      showResult(segmente?.text || "â“");
+      const text = getroffen ? getroffen.text : "â“";//Add commentMore actions
+        showResult(text);
     }
   }, 50);
 }
 
 
 const showResult = r => {
-  results.push(r);
-  localStorage.setItem("drehradErgebnisse", JSON.stringify(results));
+  results.push(r); 
+  fetch("/api/results", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ result: r })
+  });
   updateResults();
 };
 
@@ -144,7 +144,7 @@ if (inputBox.children.length === 0) for (let i = 0; i < 4; i++) addInput();
 draw();
  updateResults();
 
-
+/*
   const respomse = await fetch(url); 
   console.log('Response:', response);
   const text = await response.text(); 
@@ -163,7 +163,7 @@ async function sendJsonWithGET(url,jsonData) {
 const person = {name: "Max", alter: 19}; 
 const jsonData = JSON.stringify(person); 
 
-sendJsonWithPOST('http://localhost:3000/', jsonData);  
+sendJsonWithPOST('http://localhost:3000/', jsonData);  */
 
 async function speichereOptionen() {
   const options = [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
