@@ -62,22 +62,25 @@ function draw() {
 
 function spin() {
   let rot = 0, speed = Math.random() * 30 + 20;
+
   const loop = setInterval(() => {
     rot += speed;
     speed *= 0.95;
     canvas.style.transform = `rotate(${rot}deg)`;
+
     if (speed < 0.5) {
       clearInterval(loop);
-      const totalRotation = (rot % 360 + 360) % 360;Add commentMore actions
-        const zielWinkelGrad = (270 - totalRotation + 360) % 360;
-        const zielWinkelRad = zielWinkelGrad * Math.PI / 180;
-  Add commentMore actions
-        const getroffen = segmente.find(s =>
-          zielWinkelRad >= s.start && zielWinkelRad < s.end
-        );‚
-      showResult(seg?.text || "❓");
-      const text = getroffen ? getroffen.text : "❓";Add commentMore actions
-        showResult(text);
+
+      const totalRotation = rot % 360;
+      const zielWinkelGrad = (270 - totalRotation + 360) % 360;
+      const zielWinkelRad = zielWinkelGrad * Math.PI / 180;
+
+      const getroffen = segmente.find(s => 
+        zielWinkelRad >= s.start && zielWinkelRad < s.end
+      );
+
+      const text = getroffen ? getroffen.text : "❓";
+      showResult(text);
     }
   }, 50);
 }
