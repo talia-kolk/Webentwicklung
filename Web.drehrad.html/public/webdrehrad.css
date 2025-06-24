@@ -1,4 +1,4 @@
-body {More actions
+body {
   font-family: sans-serif;
   background: #7de8f8;
   color: #3f09f3;
@@ -68,6 +68,6 @@ input, button {
   left: 50%;
   transform: translateX(-50%);
   font-size: 20px;
-  color: red;Add commentMore actions
+  color: red;
   z-index: 10;
 }
