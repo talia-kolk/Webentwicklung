@@ -76,6 +76,8 @@ function spin() {
           zielWinkelRad >= s.start && zielWinkelRad < s.end
         );‚
       showResult(seg?.text || "❓");
+      const text = getroffen ? getroffen.text : "❓";Add commentMore actions
+        showResult(text);
     }
   }, 50);
 }
