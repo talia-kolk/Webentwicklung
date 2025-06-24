@@ -27,7 +27,7 @@ fetch("/api/options")
 const getOptions = () => [...inputBox.querySelectorAll("input")].map(i => i.value || "Leer");
 
 function draw() {
-  const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;Add commentMore actions
+  const opts = getOptions(), r = canvas.width / 2, a = 2 * Math.PI / opts.length;
   const bg = ["#000", "#fff", "#ccc"], fg = ["#fff", "#000", "#001f4d"];
   segmente = []; // leeren!
 
@@ -55,7 +55,7 @@ function draw() {
     ctx.fillStyle = fg[c];
     ctx.font = "bold 14px sans-serif";
     ctx.textAlign = "right";
-    ctx.fillText(txt, r - 10, 5);Add commentMore actions
+    ctx.fillText(txt, r - 10, 5);
     ctx.restore();
   });
 }
