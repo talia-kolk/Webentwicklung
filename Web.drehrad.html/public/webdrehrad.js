@@ -68,8 +68,13 @@ function spin() {
     canvas.style.transform = `rotate(${rot}deg)`;
     if (speed < 0.5) {
       clearInterval(loop);
-      const corrected = (360 - (rot % 360) + 90) % 360;
-      const index = Math.floor((corrected / 360) * opts.length) % opts.length;
+      const totalRotation = (rot % 360 + 360) % 360;Add commentMore actions
+        const zielWinkelGrad = (270 - totalRotation + 360) % 360;
+        const zielWinkelRad = zielWinkelGrad * Math.PI / 180;
+  Add commentMore actions
+        const getroffen = segmente.find(s =>
+          zielWinkelRad >= s.start && zielWinkelRad < s.end
+        );‚
       showResult(seg?.text || "❓");
     }
   }, 50);
