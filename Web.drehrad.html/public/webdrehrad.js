@@ -1,12 +1,13 @@
-const canvas = document.getElementById("wheel"),
-  ctx = canvas.getContext("2d"),
-  addBtn = document.getElementById("addBtn"),
-  removeBtn = document.getElementById("removeBtn"),
-  clearInputsBtn = document.getElementById("clearInputsBtn"),
-  startBtn = document.getElementById("startBtn"),
-  clearResultsBtn = document.getElementById("clearResultsBtn"),
-  inputBox = document.getElementById("optionList"),
-  resultBox = document.querySelector(".results");
+const canvas = document.getElementById("wheel");
+const ctx = canvas.getContext("2d");
+
+const addBtn = document.getElementById("addBtn");
+const removeBtn = document.getElementById("removeBtn");
+const clearInputsBtn = document.getElementById("clearInputsBtn");
+const startBtn = document.getElementById("startBtn");
+const clearResultsBtn = document.getElementById("clearResultsBtn");
+const inputBox = document.getElementById("optionList");
+const resultBox = document.getElementById("resultBox");
 
 
 // Optionen vom Server laden
